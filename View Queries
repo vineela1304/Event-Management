@@ -1,0 +1,27 @@
+View 1: Total_Expense_Per_Event_View:
+Calculates the total expense for each event.
+CREATE VIEW Total_Expense_Per_Event_View AS
+SELECT e.event_id, e.event_name,
+SUM(ex.amount) AS total_expense
+FROM Event e
+LEFT JOIN Expense ex ON e.event_id = ex.event_id
+GROUP BY e.event_id, e.event_name;
+
+View 2: Performers_With_Average_Sessions_View:
+Lists performers along with the average number of sessions they perform in.
+CREATE VIEW Performers_With_Average_Sessions_View AS
+SELECT sp.speaker_performer_id, sp.first_name, sp.last_name, sp.email,
+sp.contact_number, sp.bio, sp.area_of_performance,
+COUNT(s.session_performance_id) AS total_sessions,
+AVG(TIMESTAMPDIFF(MINUTE, s.start_time, s.end_time)) AS
+average_session_duration_minutes
+FROM Speaker_Performer sp
+LEFT JOIN Session_Performance s ON sp.speaker_performer_id =
+s.speaker_performer_id
+GROUP BY sp.speaker_performer_id, sp.first_name, sp.last_name, sp.email,
+sp.contact_number, sp.bio, sp.area_of_performance;
+
+View 3: Event Duration View:
+Calculates the duration of each event in days.
+CREATE VIEW Event_Duration AS
+SELECT event_name, DATEDIFF(end_date, start_date) AS duration_days FROM Event;
